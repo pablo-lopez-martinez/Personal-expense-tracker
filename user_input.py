@@ -2,15 +2,15 @@ from datetime import datetime
 
 CATEGORIES = {"I": "Income", "E": "Expense"}
 
-def get_date():
-    date = input("Enter the date (dd-mm-yyyy) or press enter to add the actual date:")
-    if date=="":
+def get_date(prompt, allow_default=False):
+    date = input(prompt)
+    if date=="" and allow_default:
         date = datetime.now().strftime("%d-%m-%Y")
     try:
         datetime.strptime(date, "%d-%m-%Y")
     except ValueError:
         print("Invalid date")
-        return get_date()
+        return get_date(prompt, allow_default)
     return date
 
 def get_amount():
@@ -37,4 +37,3 @@ def get_description():
  
 
 
-get_date()

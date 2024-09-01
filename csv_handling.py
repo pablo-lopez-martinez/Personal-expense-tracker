@@ -1,10 +1,11 @@
 import pandas as pd
 import csv
+from datetime import datetime
 
 class CSV:
     CSV_FILE = "finance_data.csv"
     COLUMS = ["date", "amount", "category", "description"]
-    FORMAT= "%d-%m-%y"
+    FORMAT= "%d-%m-%Y"
 
     @classmethod
     def initialize_csv(cls):
@@ -17,7 +18,7 @@ class CSV:
     @classmethod 
     def add_entry(cls, date: str, amount:int, category: str, description: str):
         entry = {
-            "date": date,
+            "date": datetime.strptime(date, cls.FORMAT),
             "amount": amount,
             "category": category,
             "description": description
@@ -29,6 +30,9 @@ class CSV:
     @classmethod
     def get_entries(cls, start_date: str, end_date: str):
         df = pd.read_csv(cls.CSV_FILE)
-        filtered = ((df["date"]>start_date) & (df["date"]<end_date))
-        entries = df.loc[filtered]
-        return entries
+        start_date_formated = datetime.strptime(start_date, cls.FORMAT)
+        end_date_formated = datetime.strptime(end_date, cls.FORMAT)
+        df["date"] = df["date"].apply(lambda x : datetime.strptime(x, cls.FORMAT) )
+        mask = ((df["date"]>=start_date_formated) & (df["date"]<=end_date_formated))
+        entries = df.loc[mask]
+        return  entries.to_string(index=False)

@@ -7,7 +7,7 @@ import os
 
 def add():
     CSV.initialize_csv()
-    date = get_date()
+    date = get_date("Enter the date (dd-mm-yyyy) or press enter to add the actual date:", True)
     amount = get_amount()
     category = get_category()
     description = get_description()
@@ -16,7 +16,10 @@ def add():
 
 
 def view_transactions():
-    pass
+    startdate=get_date("Enter the start date (dd-mm-yyyy): ")
+    end_date = get_date("Enter the end date (dd-mm-yyyy): ")
+    csv_entries = CSV.get_entries(startdate, end_date)
+    print(csv_entries)
 
 
 
