@@ -25,7 +25,6 @@ class CSV:
         with open(cls.CSV_FILE, "a", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=cls.COLUMS)
             writer.writerow(entry)
-        print("Entry added succesfully")
 
     @classmethod
     def get_entries(cls, start_date: str, end_date: str):
