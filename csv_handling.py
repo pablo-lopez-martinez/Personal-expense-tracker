@@ -29,10 +29,19 @@ class CSV:
 
     @classmethod
     def get_entries(cls, start_date: str, end_date: str):
+        response = {"Entries": "", "Total income": 0, "Total expense": 0}
         df = pd.read_csv(cls.CSV_FILE)
         start_date_formated = datetime.strptime(start_date, cls.FORMAT)
         end_date_formated = datetime.strptime(end_date, cls.FORMAT)
         df["date"] = df["date"].apply(lambda x : datetime.strptime(x, cls.FORMAT) )
         mask = ((df["date"]>=start_date_formated) & (df["date"]<=end_date_formated))
         entries = df.loc[mask]
-        return  entries.to_string(index=False)
+        income = entries.loc[entries["category"]=="Income"]
+        expense = entries.loc[entries["category"]=="Expense"]
+        response["Total income"] = income["amount"].sum()
+        response["Total expense"] = expense["amount"].sum()
+        response["Entries"] = entries.to_string(index=False)
+        return response
+    
+
+CSV.get_entries("02-02-2002", "02-02-2025")

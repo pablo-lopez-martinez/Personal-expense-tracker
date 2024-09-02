@@ -16,11 +16,19 @@ def add():
 
 
 def view_transactions():
-    startdate=get_date("Enter the start date (dd-mm-yyyy): ")
+    start_date=get_date("Enter the start date (dd-mm-yyyy): ")
     end_date = get_date("Enter the end date (dd-mm-yyyy): ")
-    csv_entries = CSV.get_entries(startdate, end_date)
-    print(csv_entries)
+    response = CSV.get_entries(start_date, end_date)
+    total_income = response["Total income"]
+    total_expense = response["Total expense"]
+    net_savings = total_income-total_expense
+    print(response["Entries"])
+    print("Summary:")
+    print(f"Total income: ${total_income: .2f}")
+    print(f"Total expense: ${total_expense: .2f}")
+    print(f"Net savings: ${net_savings: .2f}")
 
+    
 
 
 def main():
