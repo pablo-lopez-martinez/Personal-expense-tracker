@@ -16,7 +16,16 @@ The script uses the following Python libraries:
 - `pandas`
 - `matplotlib`
 
-You can install them using pip if they are not already installed:
+# Setup
+
+## 1. Clone the Repository
+
+First, clone the repository to your local machine. If you don’t have `git` installed, you can download the ZIP file from the repository and extract it.
 
 ```bash
-pip install pandas matplotlib
+git clone <repository-url>
+cd personal-expense-tracker
+```
+## 2. Run the application
+```bash
+python main.py
