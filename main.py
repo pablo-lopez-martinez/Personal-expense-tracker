@@ -1,5 +1,6 @@
 import pandas as pd
-import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
 import csv 
 from user_input import *
 from csv_handling import CSV
@@ -16,18 +17,51 @@ def add():
 
 
 def view_transactions():
-    start_date=get_date("Enter the start date (dd-mm-yyyy): ")
-    end_date = get_date("Enter the end date (dd-mm-yyyy): ")
-    response = CSV.get_entries(start_date, end_date)
-    total_income = response["Total income"]
-    total_expense = response["Total expense"]
+    #start_date=get_date("Enter the start date (dd-mm-yyyy): ")
+    #end_date = get_date("Enter the end date (dd-mm-yyyy): ")
+    start_date= "02-02-2002"
+    end_date= "02-02-2025"
+    entries = CSV.get_entries(start_date, end_date)
+    income = entries.loc[entries["category"]=="Income"]
+    expense = entries.loc[entries["category"]=="Expense"]
+    total_income = income["amount"].sum()
+    total_expense = expense["amount"].sum()
     net_savings = total_income-total_expense
-    print(response["Entries"])
+    print(entries.to_string(index=False))
     print("Summary:")
     print(f"Total income: ${total_income: .2f}")
     print(f"Total expense: ${total_expense: .2f}")
     print(f"Net savings: ${net_savings: .2f}")
+    if input("Do you want to see a plot? (y/n) ").lower() == "y":
+                plot_transactions(entries)
 
+
+def plot_transactions(df):
+    df.set_index("date", inplace=True)
+
+    income_df = (
+        df[df["category"]=="Income"]
+        .resample("D")
+        .sum()
+        .reindex(df.index, fill_value=0)
+    )
+
+    expense_df = (
+        df[df["category"] == "Expense"]
+        .resample("D")
+        .sum()
+        .reindex(df.index, fill_value=0)
+    )
+
+    plt.figure(figsize=(12,7))
+    plt.plot(income_df.index, income_df["amount"], label="Income", color="g")
+    plt.plot(expense_df.index, expense_df["amount"], label="Expense", color="r")
+    plt.xlabel("Date")
+    plt.ylabel("Amount")
+    plt.title("Income and Expenses Over Time")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
     
 
 
